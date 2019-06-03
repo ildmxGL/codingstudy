@@ -1,0 +1,6 @@
+def solution(array, commands):
+    return list(map(lambda x:sorted(array[x[0]-1:x[1]])[x[2]-1], commands))
+
+
+comands의 한 원소 [a,b,c]에 대해
+a부터 b까지 자른 후 정렬한 것 중 c 번째 숫자를 출력
