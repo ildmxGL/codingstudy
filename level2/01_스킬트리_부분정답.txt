@@ -1,0 +1,15 @@
+def solution(skill, skill_trees):
+    answer = 0
+    for tree in skill_trees:
+        n = -1 #index
+        e = False #error
+        for i in skill:
+            m = tree.find(i)
+            if n <= m:
+                n = m
+            else:
+                e = True
+                break
+        if e == False:
+            answer += 1
+    return answer
