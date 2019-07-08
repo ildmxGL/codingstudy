@@ -1,55 +1,61 @@
-def solution(name):
-    print(name)
-    answer = 0
-    for x in name:
-        answer += ord(x) - ord('A') if ord(x) < ord('M') else ord('Z') + 1 - ord(x)
-    tmp = answer
-    
-    len_long_A = 0
-    for i in range(name.count('A'), 0, -1):
-        if 'A' * i in name:
-            len_long_A = i
+def find_mn(idx, name):
+    base = ['A'] * len(name)
+    name[idx] = 'A'
+    if name == base:
+        return 0
+    right, left = 0, 0
+    ridx, lidx = idx, idx
+    nw_right = [x for x in name]
+    nw_left = [x for x in name]
+    for _ in range(len(name)):
+        if nw_right[ridx] != 'A':
             break
-    else:
-        return answer + len(name) - 1
-    idx_long_A = name.index('A' * len_long_A)
-    """
-    # Candidates of movement
-    # let name: [a, b, c]; b is length of the longest 'AA...A'
-    # consider [AA...A, a, b, c] or [a, b, c, AA...A]
-    # 1) a, b, c
-    # 2) a, a', c
-    # 3) c, c', a
-    """
-    a = idx_long_A
-    b = len_long_A
-    c = len(name[idx_long_A + len_long_A:])
-    a1 = 0
-    b1 = 0
-    if name != 'A' * len_long_A:
-        while(name[a1] == 'A'):
-            a1 += 1
-        while(name[len(name) - 1 - b1] == 'A'):
-            b1 += 1
-        if a1 == len_long_A:
-            a1 = 0
-        if b1 == len_long_A:
-            b1 = 0
+        ridx = (ridx + 1) % len(name)
+        right += 1
+    right += find_mn(ridx, nw_right)
+    for _ in range(len(name)):
+        if nw_left[lidx] != 'A':
+            break
+        lidx = lidx - 1 if lidx - 1 < 0 else len(name) - 1
+        left += 1
+    left += find_mn(lidx, nw_left)
 
-    cand_move =[]
-    cand_move.append(len(name) - 1 - b1)
-    cand_move.append(len(name) - a1)
-    cand_move.append(c * 2 - 1 + a if a else c)
-    if a != 0 and c != 0:
-        cand_move.append(a * 2 - 2 + c)
-    elif a == 0:
-        cand_move.append(c)
-    elif c == 0:
-        cand_move.append(a - 1)
-    print(cand_move)
-    answer += min(cand_move)
-    print(answer - tmp)
-    return answer
+    return left if left < right else right
+
+def solution(name):
+    answer = 0
+    tmp = 0
+    print(name)
+    for x in name:
+        tmp += ord(x) - ord('A') if ord(x) < ord('M') else ord('Z') + 1 - ord(x)
+    name = list(name)
+    idx = 0
+    answer += find_mn(idx, name)
+    """
+    while True:
+        ridx, lidx = 1, 1
+        tmp += ord(name[idx]) - ord('A') if ord(name[idx]) < ord('M') else ord('Z') + 1 - ord(name[idx])
+        name[idx] = 'A'
+        if name == base:
+            break
+        for i in range(1, len(name)):
+            if name[idx + i] == 'A':
+                ridx += 1
+            else:
+                break
+            if name[idx - i] == 'A':
+                lidx += 1
+            else:
+                break
+        if ridx > lidx:
+            answer += lidx
+            idx -= lidx
+        else:
+            answer += ridx
+            idx += ridx
+    """
+    print(answer)
+    return answer + tmp
 
 print(solution('JAZ'))
 print(solution('JEROEN'))
@@ -71,3 +77,5 @@ print(solution('ABAB'))
 print(solution('BABA'))
 print(solution('ABABA'))
 print(solution('BABAB'))
+print(solution('AAABAAAA'))
+print(solution('AAABAAAAB'))

@@ -1,3 +1,5 @@
+"""
+# 효율성 테스트 #1, #3 Failure
 def solution(stock, dates, supplies, k):
     answer = 0
     today = 0
@@ -16,6 +18,22 @@ def solution(stock, dates, supplies, k):
             stock += supplies.pop(maxidx)
             idx -= 1
             answer += 1
+    return answer
+"""
+import heapq
+def solution(stock, dates, supplies, k):
+    answer = 0
+    pq = []
+    idx = 0
+    len_dates = len(dates)
+    for day in range(k):
+        if day == dates[idx]:
+            heapq.heappush(pq, -supplies[idx])
+            idx += 1 if idx < len_dates - 1 else 0
+        if not stock:
+            stock = -heapq.heappop(pq)
+            answer += 1
+        stock -= 1
     return answer
 
 print(solution(4, [4, 10, 15], [20, 5, 10], 30))            #2
