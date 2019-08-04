@@ -5,6 +5,5 @@ def solution(arrangement):
         if arrangement[i] == '(':
             stack.append(i)
         else:
-            stack.pop()
-            answer += len(stack) if arrangement[i-1] == '(' else 1
+            answer += len(stack) if stack.pop()+1 == i else 1
     return answer
