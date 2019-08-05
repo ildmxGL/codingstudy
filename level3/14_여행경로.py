@@ -35,6 +35,8 @@ def solution(tickets):
     list_result = []
 
     for t in tickets:
+        if t[0] != 'ICN':
+            continu
         c_tickets = tickets.copy()
         c_tickets.remove(t)
         dfs(t[1], c_tickets, t[0], list_result)
