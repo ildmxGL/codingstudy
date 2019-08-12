@@ -1,11 +1,11 @@
 BOUNDARY = 5
 
 def solution(dirs):
-    d = 0
+    answer = 0
     p = [0, 0]
     routes = set()
     for move in dirs:
-        route = p.copy()
+        p0 = p.copy()
         if move == 'U' and p[1] < BOUNDARY:
             p[1] += 1
         elif move == 'D' and p[1] > -BOUNDARY:
@@ -15,14 +15,15 @@ def solution(dirs):
         elif move == 'L' and p[0] > -BOUNDARY:
             p[0] -= 1
         
-        if route == p: continue
-        else:
-            route = ' '.join(map(str, route + p))
+        if p0 == p: continue
 
-            if route not in routes:
-                routes.add(route)
-                d += 1
-    return d
+        route = ' '.join(map(str, p0 + p))
+        route_reverse = ' '.join(map(str, p + p0))
+        if route not in routes:
+            routes.add(route)
+            routes.add(route_reverse)
+            answer += 1
+    return answer
 
-print(solution('ULURRDLLU'))
-print(solution('LULLLLLLU'))
+print(solution('ULURRDLLU')) # 7
+print(solution('LULLLLLLU')) # 7
