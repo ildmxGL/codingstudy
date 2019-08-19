@@ -1,47 +1,18 @@
-DIV = 1000000007
-S = 0
-"""
-# 시간 초과 4/6 실패
-def pay_func(n, money):
-    global S
-    if len(money) == 1:
-        if n % money[0] == 0:
-            S += 1
-        return
-
-    for i in range(len(money) - 1, -1, -1):
-        if money[i] > n:
-            continue
-        if money[i] == n:
-            S = (S + 1) % DIV
-            continue
-
-        pay_func(n - money[i], money[:i + 1])
-    return
-"""
-
-def pay_func(n, money):
-    global S
-    if not money:
-        return
-    if len(money) == 1:
-        if n % money[0] == 0:
-            S = (S + 1) % DIV
-        return
-
-    for i in range(len(money) - 1, -1, -1):
-        for t in range(n // money[i], 0, -1):
-            x = money[i] * t
-            if x == n:
-                S = (S + 1) % DIV
-                continue
-
-            pay_func(n - x, money[:i])
-
-    return
-
 def solution(n, money):
-    pay_func(n, sorted(money))
-    return S
+    cache = []
+    DIV = 1000000007
+
+    for i, v in enumerate(money):
+        if i == 0:
+            cache = [1 if m % money[0] == 0 else 0 for m in range(n + 1)]
+            continue
+        for j in range(n + 1):
+            if j < v:
+                continue
+            else:
+                cache[j] += cache[j - v]
+    return cache[n] % DIV
 
 print(solution(5, [1, 2, 5])) # 4
+print(solution(10, [1, 2, 5])) # 10
+print(solution(12, [2, 3, 5, 6])) # 8
